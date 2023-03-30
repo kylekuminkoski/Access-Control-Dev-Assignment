@@ -137,7 +137,24 @@ public class access{
 				case "chmod":
 					changeMod(tokens.nextToken(),tokens.nextToken(),tokens.nextToken(),tokens.nextToken());
 					break;
+				
+				case "chown":
+					changeOwner(tokens.nextToken(), tokens.nextToken());
+					break;
+					
+				case "readcomments":
+					
+					break;
+					
+				case "writecomments":
+						
+					break;
+					
+				case "end":
+					
+					break;
 				}
+				
 				
 				
 				
@@ -367,13 +384,13 @@ public class access{
 		if(checkSession("chmod"))
 			return;
 		
-		Picture pic = pictureTable.get(pictureName);
-		
-		if(pic == null) {
+		if(!pictureExists(pictureName)) {
 			consoleOut.println("Error: file " + pictureName + " not found");
 			auditOut.println("Error: file " + pictureName + " not found");
 			return;
 		}
+		
+		Picture pic = pictureTable.get(pictureName);
 		
 		if(!user.getUserName().equals(pic.getOwnerName()) & !user.getOwnerViewing()) {
 			consoleOut.println("Error on chmod: Friend " + user.getUserName() + " does not have permissions for " + pictureName);
@@ -391,5 +408,32 @@ public class access{
 		auditOut.println("Permissions for " + pic.pictureName + " set to " + pic.getPermissions(0) + " " + pic.getPermissions(1) + " " + pic.getPermissions(2)+ " " + "by " + user.getUserName());
 		
 	}
-
+	
+	public static void changeOwner(String pictureName, String friendName) throws FileNotFoundException {
+		if(checkPrivileges("chown")) 
+			return;
+		
+		if(!pictureExists(pictureName)) {
+			consoleOut.println("Error on chown: file " + pictureName + " not found");
+			auditOut.println("Error on chown: file " + pictureName + " not found");
+			return;
+		}
+		
+		if(!friendExists(friendName)) {
+			consoleOut.println("Error on chown: friend " + friendName + " does not exist");
+			auditOut.println("Error on chown: friend " + friendName + " does not exist");
+			return;
+		}
+		
+		Picture pic = pictureTable.get(pictureName);
+		
+		pic.setOwnerName(friendName);
+		pictureTable.put(pictureName, pic);
+		consoleOut.println("chown: Friend " + pic.getOwnerName() + " set to owner of " + pictureName);
+		auditOut.println("chown: Friend " + pic.getOwnerName() + " set to owner of " + pictureName);
+	}
+	
+	public static void readComments(String pictureName) {
+		
+	}
 }
