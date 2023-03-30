@@ -2,7 +2,7 @@ package access;
 
 public class Session {
 	String userName;
-	String ownerName = null;
+	String ownerName;
 	boolean isOwnerViewing;
 	
 	public Session() {
@@ -46,9 +46,9 @@ public class Session {
 		this.isOwnerViewing = bool;
 	}
 	
-	public Session logout() {
-		
-		return new Session();
+	public void logout() {
+		this.userName = null;
+		this.isOwnerViewing = false;
 	}
 	
 }

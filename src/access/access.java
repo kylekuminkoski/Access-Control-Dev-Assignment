@@ -3,30 +3,27 @@ package access;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class access{
-	static File instructions, audit, friends, lists, pictures;
-	static PrintStream consoleOut, auditOut, friendsOut, listsOut, picturesOut;
-	private static String userSession;
-	private static boolean ownerExists;
-	private static boolean ownerView;
-	private static boolean friendView;
+	private static File instructions, audit, friends, lists, pictures;
+	private static PrintStream consoleOut, auditOut, friendsOut, listsOut, picturesOut;
+	private static List nil;
 	private static Session user;
-
+	private static HashMap<String, List> listTable;
+	
 	public static void main(String[] args) throws Exception {
-		ownerExists = false; // used to check if the profile owner was already created
-		ownerView = false; // used to check if the profile owner is viewing the profile
-		friendView = false; // used to check if a friend is already viewing the profile
 		//Console Print Stream
 		consoleOut = System.out;
 		
 		// Create nil list
-		List nil = new List();
+		nil = new List();
+		
+		listTable = new HashMap<String, List>();
 		
 		// Create null Session
 		user = new Session();
@@ -116,9 +113,16 @@ public class access{
 				case "logout":
 					consoleOut.println("Friend " + user.getUserName() + " logged out");
 					auditOut.println("Friend " + user.getUserName() + " logged out");
-					user = user.logout();
+					user.logout();
 					break;
 					
+				case "listadd":
+					listAdd(tokens.nextToken());
+					break;
+				
+				case "friendlist":
+					friendList(tokens.nextToken(), tokens.nextToken());
+					break;
 				
 				}
 				
@@ -166,11 +170,27 @@ public class access{
 		return exists;
 	}
 	
-	private static void friendAdd(String friendName) throws FileNotFoundException {
-		if(!user.getOwnerViewing()) {
-			consoleOut.println("Error: only profile owner may issue friendadd command");
-			auditOut.println("Error: only profile owner may issue friendadd command");
+	private static boolean listExists(String listName) {
+		if(listTable.get(listName) != null | listName.equals(nil.getName())) 
+			return true; 
+		else 
+			return false;
+	}
+	
+	public static boolean checkPrivileges(String command) {
+		if(user.getOwnerViewing() == false) {
+			consoleOut.println("Error: only profile owner may issue " + command + " command");
+			auditOut.println("Error: only profile owner may issue " + command + " command");
+			return true;
 		}
+		
+		return false;
+	}
+	
+	private static void friendAdd(String friendName) throws FileNotFoundException {
+		if(checkPrivileges("friendadd"))
+			return;
+
 		
 		
 		if(friendExists(friendName)) {
@@ -200,14 +220,44 @@ public class access{
 		
 		user.setUserName(friendName);
 		
-		if(user.getUserName().equals(user.getOwner()))
+		if(friendName.equals(user.getOwner())) {
 			user.setOwnerViewing(true);
+			}
 		
-		consoleOut.println("Friend " + friendName + " views the profile");
-		auditOut.println("Friend " + friendName + " views the profile");
+		consoleOut.println("Friend " + user.getUserName() + " views the profile");
+		auditOut.println("Friend " + user.getUserName() + " views the profile");
 		
 	}
 	
-
+	private static void listAdd(String listName) {
+		if(checkPrivileges("listadd"))
+			return;
+		
+		if (listExists(listName)) {
+			consoleOut.println("Error: list " + listName + " already exists");
+			auditOut.println("Error: list " + listName + " already exists");
+			return;
+		}
+				
+		List newList = new List(listName);
+		listTable.put(listName, newList);
+		consoleOut.println("list " + listName + " created");
+		auditOut.println("list " + listName + " created");
+	}
+	
+	private static void friendList(String friendName, String listName) throws FileNotFoundException {
+		if(checkPrivileges("friendlist"))
+			return;
+		
+		if (!listExists(listName)) {
+			consoleOut.println("Error: list " + listName + " does not exist");
+			auditOut.println("Error: list " + listName + " does not exist");
+			return;
+		}
+			
+		
+		
+		
+	}
 
 }

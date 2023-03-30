@@ -14,5 +14,13 @@ public class List {
 		this.name = name;
 		this.friends = new ArrayList<String>();
 	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String newListName) {
+		this.name = newListName;
+	}
 
 }
