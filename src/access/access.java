@@ -123,7 +123,10 @@ public class access{
 				case "friendlist":
 					friendList(tokens.nextToken(), tokens.nextToken());
 					break;
-				
+					
+				case "postpicture":
+					postPicture(tokens.nextToken());
+					break;
 				}
 				
 				
@@ -254,9 +257,13 @@ public class access{
 			auditOut.println("Error: list " + listName + " does not exist");
 			return;
 		}
-			
 		
-		
+		List adder = listTable.get(listName);
+		adder.friends.add(friendName);
+		listTable.put(listName, adder);	
+	}
+	
+	private static void postPicture(String pictureName) {
 		
 	}
 
