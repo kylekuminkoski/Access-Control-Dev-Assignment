@@ -10,13 +10,9 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class access {
-	static File instructions;
-	static PrintStream auditOut;
-	static PrintStream consoleOut;
-	static PrintStream friendsOut;
-	static PrintStream listsOut;
-	static PrintStream picturesOut;
-	
+	static File instructions, audit, friends, lists, pictures;
+	static PrintStream consoleOut, auditOut, friendsOut, listsOut, picturesOut;
+
 	public static void main(String[] args) throws Exception {
 		boolean ownerExists = false;
 		
@@ -27,19 +23,19 @@ public class access {
 		List nil = new List();
 		
 		//Create Audit Logs
-		File audit = new File("audit.txt");
+		audit = new File("audit.txt");
 		auditOut = createLog(audit);
 		
 		//Create Friends Log
-		File friends = new File("friends.txt");
+		friends = new File("friends.txt");
 		friendsOut = createLog(friends);
 		
 		//Create Lists Log
-		File lists = new File ("lists.txt");
+		lists = new File ("lists.txt");
 		listsOut = createLog(friends);
 		
 		//Create Pictures Log
-		File pictures = new File ("pictures.txt");
+		pictures = new File ("pictures.txt");
 		listsOut = createLog(pictures);		
 
 		//Read in instructions from arguments. If argument is not given, throws error.
@@ -75,7 +71,7 @@ public class access {
 				
 				if(!ownerExists && token.equals("friendadd")) {
 					ownerExists = true;
-					friendadd(tokens.nextToken(), friends);
+					friendAdd(tokens.nextToken());
 				}
 				
 				
@@ -88,8 +84,10 @@ public class access {
 	
 	
 	//Helper method designed to simplify the file creation, overwrite, and output for each log.
-	//Method will try
-	public static PrintStream createLog(File name) {
+	//Method will delete existing log file and create a new text file with the given file name.
+	//Arguments: log file name of File type Object
+	//Returns: PrintStream for log file
+	private static PrintStream createLog(File name) {
 		PrintStream print;
 		try {
 			name.delete();
@@ -104,21 +102,37 @@ public class access {
 		return null;
 	}
 	
-	public static void friendadd(String friendName, File friendslist) throws Exception {
-		Scanner reader = new Scanner(friendslist);
+	//Helper method to determine if a friend name already exists in friends.txt
+	//Arguments: The friend name being checked. String type variable
+	//Returns: true if the friend exists, false if not
+	private static boolean friendExists(String friendName) throws FileNotFoundException {
+		boolean exists = false;
+		Scanner reader = new Scanner(friends);
 		
 		while(reader.hasNext()) {
 			if(reader.next().equals(friendName)) {
-				consoleOut.println("Error: friend " + friendName + " already exists");
-				auditOut.println("Error: friend " + friendName + " already exists");
-				reader.close();
-				return;
+				exists = true;
 			}		
 		}
 		reader.close();
+		return exists;
+	}
+	
+	private static void friendAdd(String friendName) throws FileNotFoundException {
+		
+		if(friendExists(friendName)) {
+			consoleOut.println("Error: friend " + friendName + " already exists");
+			auditOut.println("Error: friend " + friendName + " already exists");
+			return;
+		}
+
 		friendsOut.println(friendName);
 		consoleOut.println("Friend " + friendName + " added");
 		auditOut.println("Friend " + friendName + " added");
+	}
+	
+	private static void viewBy(String friendName) {
+		
 	}
 
 }
