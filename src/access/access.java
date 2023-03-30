@@ -9,18 +9,27 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class access {
+public class access{
 	static File instructions, audit, friends, lists, pictures;
 	static PrintStream consoleOut, auditOut, friendsOut, listsOut, picturesOut;
+	private static String userSession;
+	private static boolean ownerExists;
+	private static boolean ownerView;
+	private static boolean friendView;
+	private static Session user;
 
 	public static void main(String[] args) throws Exception {
-		boolean ownerExists = false;
-		
+		ownerExists = false; // used to check if the profile owner was already created
+		ownerView = false; // used to check if the profile owner is viewing the profile
+		friendView = false; // used to check if a friend is already viewing the profile
 		//Console Print Stream
 		consoleOut = System.out;
 		
-		//Create nil list
+		// Create nil list
 		List nil = new List();
+		
+		// Create null Session
+		user = new Session();
 		
 		//Create Audit Logs
 		audit = new File("audit.txt");
@@ -57,6 +66,31 @@ public class access {
 			e.printStackTrace();
 		}
 		
+		if(reader.hasNextLine()) {
+			String first = reader.nextLine();
+			StringTokenizer firstToken = new StringTokenizer(first);
+			
+			//This conditional block is used to check if the profile owner is created yet
+			//If no, it set's the ownerName and allows the owner to create the profile
+			//View is then set back to false before any more instructions are executed
+			if(!user.isSessionCreated()) {
+				if(!firstToken.nextToken().equals("friendadd")) {
+					consoleOut.println("Error: a profile owner must be created");
+					auditOut.println("Error: a profile owner must be created");
+					return;
+				}
+				
+				String ownerName = firstToken.nextToken();
+				user.setOwner(ownerName);
+				user.setOwnerViewing(true);
+				friendAdd(ownerName);
+				user.setOwnerViewing(false);
+			}
+			
+			
+		}
+		
+		
 		//while instruction is not 'end'
 		
 		while(reader.hasNextLine()) { //Iterates through each line in instruction file
@@ -69,9 +103,23 @@ public class access {
 			while(tokens.hasMoreTokens()) { //Iterates through each token in a line
 				String token = tokens.nextToken();
 				
-				if(!ownerExists && token.equals("friendadd")) {
-					ownerExists = true;
+				switch (token) 
+				{
+				case "friendadd":
 					friendAdd(tokens.nextToken());
+					break;
+				
+				case "viewby":
+					viewBy(tokens.nextToken());
+					break;
+					
+				case "logout":
+					consoleOut.println("Friend " + user.getUserName() + " logged out");
+					auditOut.println("Friend " + user.getUserName() + " logged out");
+					user = user.logout();
+					break;
+					
+				
 				}
 				
 				
@@ -119,6 +167,11 @@ public class access {
 	}
 	
 	private static void friendAdd(String friendName) throws FileNotFoundException {
+		if(!user.getOwnerViewing()) {
+			consoleOut.println("Error: only profile owner may issue friendadd command");
+			auditOut.println("Error: only profile owner may issue friendadd command");
+		}
+		
 		
 		if(friendExists(friendName)) {
 			consoleOut.println("Error: friend " + friendName + " already exists");
@@ -131,8 +184,30 @@ public class access {
 		auditOut.println("Friend " + friendName + " added");
 	}
 	
-	private static void viewBy(String friendName) {
+	private static void viewBy(String friendName) throws FileNotFoundException {
+		
+		if(!friendExists(friendName)) {
+			consoleOut.println("Error: friend " + friendName + " does not exist");
+			auditOut.println("Error: friend " + friendName + " does not exist");
+			return;
+		}
+		
+		if(user.getUserName() != null) {
+			consoleOut.println("Error: concurrent users are not supported");
+			auditOut.println("Error: concurrent users are not supported");
+			return;
+		}
+		
+		user.setUserName(friendName);
+		
+		if(user.getUserName().equals(user.getOwner()))
+			user.setOwnerViewing(true);
+		
+		consoleOut.println("Friend " + friendName + " views the profile");
+		auditOut.println("Friend " + friendName + " views the profile");
 		
 	}
+	
+
 
 }
