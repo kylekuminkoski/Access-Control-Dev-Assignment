@@ -8,9 +8,13 @@ Friend root logged out
 Error: friend steve does not exist
 Friend steveo views the profile
 Picture script with owner steveo and default permissions created
+Permissions for script set to -w rw -- by steveo
+Error: file script2 not found
+Error on chlst: Friend steveo is not a member of list testers
 Friend steveo logged out
 Friend root views the profile
 Error: friend rita already exists
+Friend root changed list of script to testers
 Error: list testers already exists
 Friend rita added to list testers
 Friend steveo added to list testers

@@ -129,7 +129,16 @@ public class access{
 				case "postpicture":
 					postPicture(tokens.nextToken());
 					break;
+					
+				case "chlst":
+					changeList(tokens.nextToken(), tokens.nextToken());
+					break;
+				
+				case "chmod":
+					changeMod(tokens.nextToken(),tokens.nextToken(),tokens.nextToken(),tokens.nextToken());
+					break;
 				}
+				
 				
 				
 			}
@@ -305,6 +314,81 @@ public class access{
 		pictureTable.put(pictureName, post);
 		consoleOut.println("Picture " + pictureName + " with owner " + post.getOwnerName() + " and default permissions created");
 		auditOut.println("Picture " + pictureName + " with owner " + post.getOwnerName() + " and default permissions created");
+		
+	}
+	
+	public static void changeList(String pictureName, String listName) {
+		if(checkSession("changeList"))
+			return;
+		
+		Picture pic = pictureTable.get(pictureName);
+		
+		if(pic == null) {
+			consoleOut.println("Error: file " + pictureName + " not found");
+			consoleOut.println("Error: file " + pictureName + " not found");
+			return;
+		}
+		
+		if(!user.getUserName().equals(pic.getOwnerName()) & !user.getOwnerViewing()) {
+			consoleOut.println("Error on chlst: " + user.getUserName() + " does not have permission to use chlst on " + pic.getOwnerName() + "'s post");
+			auditOut.println("Error on chlst: " + user.getUserName() + " does not have permission to use chlst on " + pic.getOwnerName() + "'s post");		
+			return;
+		}
+		
+		List newList = listTable.get(listName);
+		
+		if(newList == null) {
+			consoleOut.println("Error: list " + listName + " not found");
+			consoleOut.println("Error: list " + listName + " not found");
+			return;
+		}
+		
+		if(!newList.friends.contains(user.getUserName()) & !user.getOwnerViewing()) {
+			consoleOut.println("Error on chlst: Friend " + user.getUserName() + " is not a member of list " + listName);
+			auditOut.println("Error on chlst: Friend " + user.getUserName() + " is not a member of list " + listName);
+			return;
+		}
+		
+		
+		if(listName.equals(nil.getName())) {
+			pic.setList(nil);
+			consoleOut.println("Friend " + user.getUserName() + " changed list of " + pictureName + " to " + pic.getList().getName());
+			auditOut.println("Friend " + user.getUserName() + " changed list of " + pictureName + " to " + pic.getList().getName());
+			return;
+		}
+		
+		pic.setList(newList);
+		pictureTable.put(pictureName, pic);
+		consoleOut.println("Friend " + user.getUserName() + " changed list of " + pictureName + " to " + pic.getList().getName());
+		auditOut.println("Friend " + user.getUserName() + " changed list of " + pictureName + " to " + pic.getList().getName());
+	}
+	
+	public static void changeMod(String pictureName, String owner, String group, String all) {
+		if(checkSession("chmod"))
+			return;
+		
+		Picture pic = pictureTable.get(pictureName);
+		
+		if(pic == null) {
+			consoleOut.println("Error: file " + pictureName + " not found");
+			auditOut.println("Error: file " + pictureName + " not found");
+			return;
+		}
+		
+		if(!user.getUserName().equals(pic.getOwnerName()) & !user.getOwnerViewing()) {
+			consoleOut.println("Error on chmod: Friend " + user.getUserName() + " does not have permissions for " + pictureName);
+			auditOut.println("Error on chmod: Friend " + user.getUserName() + " does not have permissions for " + pictureName);
+			return;
+		}
+		
+		pic.setPermissions(owner, 0);
+		pic.setPermissions(group, 1);
+		pic.setPermissions(all, 2);
+		
+		pictureTable.put(pictureName, pic);
+		
+		consoleOut.println("Permissions for " + pic.pictureName + " set to " + pic.getPermissions(0) + " " + pic.getPermissions(1) + " " + pic.getPermissions(2)+ " " + "by " + user.getUserName());
+		auditOut.println("Permissions for " + pic.pictureName + " set to " + pic.getPermissions(0) + " " + pic.getPermissions(1) + " " + pic.getPermissions(2)+ " " + "by " + user.getUserName());
 		
 	}
 
