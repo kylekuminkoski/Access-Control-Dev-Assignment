@@ -3,6 +3,7 @@ package access;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -16,7 +17,9 @@ public class access {
 	static PrintStream listsOut;
 	static PrintStream picturesOut;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		boolean ownerExists = false;
+		
 		//Console Print Stream
 		consoleOut = System.out;
 		
@@ -60,21 +63,25 @@ public class access {
 		
 		//while instruction is not 'end'
 		
-		while(reader.hasNextLine()) {
+		while(reader.hasNextLine()) { //Iterates through each line in instruction file
 			String line = reader.nextLine();
+			
+			if(line.equals("end")) // Ends instruction execution when end is given
+				break;
+			
 			StringTokenizer tokens = new StringTokenizer(line);
-			while(tokens.hasMoreTokens()) {
+			while(tokens.hasMoreTokens()) { //Iterates through each token in a line
 				String token = tokens.nextToken();
-				consoleOut.println(token);
-				auditOut.println(token);
+				
+				if(!ownerExists && token.equals("friendadd")) {
+					ownerExists = true;
+					friendadd(tokens.nextToken(), friends);
+				}
+				
+				
 			}
 			
 		}
-		
-		
-		
-		//get next instruction
-		
 
 		reader.close();
 	}
@@ -97,10 +104,21 @@ public class access {
 		return null;
 	}
 	
-	public void friendadd(String friendname) {
+	public static void friendadd(String friendName, File friendslist) throws Exception {
+		Scanner reader = new Scanner(friendslist);
 		
-		
-		
+		while(reader.hasNext()) {
+			if(reader.next().equals(friendName)) {
+				consoleOut.println("Error: friend " + friendName + " already exists");
+				auditOut.println("Error: friend " + friendName + " already exists");
+				reader.close();
+				return;
+			}		
+		}
+		reader.close();
+		friendsOut.println(friendName);
+		consoleOut.println("Friend " + friendName + " added");
+		auditOut.println("Friend " + friendName + " added");
 	}
 
 }
