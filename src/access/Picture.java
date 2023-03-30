@@ -1,17 +1,18 @@
 package access;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Picture {
-	String name;
+	File name;
 	String ownerName;
 	List list;
 	ArrayList<String> permissions;
 	
 	
-	public Picture(String name, String ownerName,List list) {
+	public Picture(File name, String ownerName, List list) {
 		this.name = name;
-		this.ownerName = name;
+		this.ownerName = ownerName;
 		this.list = list;
 		this.permissions = new ArrayList<String>();
 		this.permissions.add("rw");
