@@ -15,10 +15,6 @@ public class Picture {
 	
 	
 	public Picture(String pictureName, String ownerName, List list) throws FileNotFoundException {
-				
-		this.name = new File(pictureName + ".txt");
-		PrintStream pictureOut = new PrintStream(new FileOutputStream(pictureName));
-
 		this.pictureName = pictureName;
 		this.ownerName = ownerName;
 		this.list = list;
@@ -26,6 +22,47 @@ public class Picture {
 		this.permissions.add("rw");
 		this.permissions.add("--");
 		this.permissions.add("--");
+	}
+	
+	public File getFile() {
+		return this.name;
+	}
+	
+	public void setFile(File name) {
+		this.name = name;
+	}
+	
+	public String getPictureName() {
+		return this.pictureName;
+	}
+	
+	public void setPictureName(String name) {
+		this.pictureName = name;
+	}
+	
+	public String getOwnerName() {
+		return this.ownerName;
+	}
+	
+	public void setOwnerName(String name) {
+		this.ownerName = name;
+	}
+	
+	public List getList() {
+		return this.list;
+	}
+	
+	public void setList(List newList) {
+		this.list = newList;
+	}
+	
+	public String getPermissions(int index) {
+		return this.permissions.get(index);
+	}
+	
+	public void setPermissions(String perm, int index) {
+		this.permissions.remove(index);
+		this.permissions.add(index, perm);
 	}
 
 }

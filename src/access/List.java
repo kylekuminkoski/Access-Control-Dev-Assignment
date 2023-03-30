@@ -22,5 +22,6 @@ public class List {
 	public void setName(String newListName) {
 		this.name = newListName;
 	}
+	
 
 }

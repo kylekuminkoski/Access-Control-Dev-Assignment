@@ -1,0 +1,22 @@
+Friend root added
+Friend root views the profile
+Friend steveo added
+Friend rita added
+list testers created
+Error: friend steveo already exists
+Friend root logged out
+Error: friend steve does not exist
+Friend steveo views the profile
+Picture script with owner steveo and default permissions created
+Friend steveo logged out
+Friend root views the profile
+Error: friend rita already exists
+Error: list testers already exists
+Friend rita added to list testers
+Friend steveo added to list testers
+Friend root logged out
+Friend rita views the profile
+Error: picture script already exists
+Error: only profile owner may issue listadd command
+Error: only profile owner may issue friendadd command
+Friend rita logged out

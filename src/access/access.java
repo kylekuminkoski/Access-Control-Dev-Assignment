@@ -15,6 +15,7 @@ public class access{
 	private static List nil;
 	private static Session user;
 	private static HashMap<String, List> listTable;
+	private static HashMap<String, Picture> pictureTable;
 	
 	public static void main(String[] args) throws Exception {
 		//Console Print Stream
@@ -24,6 +25,7 @@ public class access{
 		nil = new List();
 		
 		listTable = new HashMap<String, List>();
+		pictureTable = new HashMap<String, Picture>();
 		
 		// Create null Session
 		user = new Session();
@@ -180,13 +182,29 @@ public class access{
 			return false;
 	}
 	
-	public static boolean checkPrivileges(String command) {
+	private static boolean pictureExists(String pictureName) {
+		if(pictureTable.get(pictureName) != null) 
+			return true; 
+		else 
+			return false;
+	}
+	
+	private static boolean checkPrivileges(String command) {
 		if(user.getOwnerViewing() == false) {
 			consoleOut.println("Error: only profile owner may issue " + command + " command");
 			auditOut.println("Error: only profile owner may issue " + command + " command");
 			return true;
 		}
 		
+		return false;
+	}
+	
+	private static boolean checkSession(String command) {
+		if(user.getUserName() == null) {
+			consoleOut.println("Error: someone must be viewing the profile to use the " + command + " command");
+			auditOut.println("Error: someone must be viewing the profile to use the " + command + " command");
+			return true;
+		}
 		return false;
 	}
 	
@@ -261,9 +279,32 @@ public class access{
 		List adder = listTable.get(listName);
 		adder.friends.add(friendName);
 		listTable.put(listName, adder);	
+		
+		consoleOut.println("Friend " + friendName + " added to list " + listName);
+		auditOut.println("Friend " + friendName + " added to list " + listName);
 	}
 	
-	private static void postPicture(String pictureName) {
+	private static void postPicture(String pictureName) throws FileNotFoundException {
+		if(checkSession("postpicture"))
+			return;
+		
+		if(pictureExists(pictureName)) {
+			consoleOut.println("Error: picture " + pictureName + " already exists");
+			auditOut.println("Error: picture " + pictureName + " already exists");
+			return;
+		}
+		
+		String fileName = pictureName.concat(".txt");
+		File newFile = new File(fileName);
+		PrintStream write = createLog(newFile);
+		write.println(pictureName);
+		write.close();
+		
+		Picture post = new Picture(pictureName, user.getUserName(), nil);
+		post.setFile(newFile);
+		pictureTable.put(pictureName, post);
+		consoleOut.println("Picture " + pictureName + " with owner " + post.getOwnerName() + " and default permissions created");
+		auditOut.println("Picture " + pictureName + " with owner " + post.getOwnerName() + " and default permissions created");
 		
 	}
 
