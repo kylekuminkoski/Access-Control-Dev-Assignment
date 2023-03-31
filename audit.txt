@@ -18,9 +18,12 @@ Friend root changed list of script to testers
 Error: list testers already exists
 Friend rita added to list testers
 Friend steveo added to list testers
+Error on chown: file script3 not found
 Friend root logged out
 Friend rita views the profile
 Error: picture script already exists
+Friend rita reads script as:
+script
 Error: only profile owner may issue listadd command
 Error: only profile owner may issue friendadd command
 Friend rita logged out

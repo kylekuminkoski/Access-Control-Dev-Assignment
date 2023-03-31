@@ -143,7 +143,7 @@ public class access{
 					break;
 					
 				case "readcomments":
-					
+					readComments(tokens.nextToken());
 					break;
 					
 				case "writecomments":
@@ -375,6 +375,7 @@ public class access{
 		}
 		
 		pic.setList(newList);
+		pic.setListName(listName);
 		pictureTable.put(pictureName, pic);
 		consoleOut.println("Friend " + user.getUserName() + " changed list of " + pictureName + " to " + pic.getList().getName());
 		auditOut.println("Friend " + user.getUserName() + " changed list of " + pictureName + " to " + pic.getList().getName());
@@ -433,7 +434,57 @@ public class access{
 		auditOut.println("chown: Friend " + pic.getOwnerName() + " set to owner of " + pictureName);
 	}
 	
-	public static void readComments(String pictureName) {
+	public static void readComments(String pictureName) throws FileNotFoundException {
+		if(checkSession("readcomments"))
+			return;
+		
+		if(!pictureExists(pictureName)) {
+			consoleOut.println("Error on readcomments: file " + pictureName + " not found");
+			auditOut.println("Error on readcomments: file " + pictureName + " not found");
+			return;
+		}
+		
+		String currentUser = user.getUserName();
+		Picture pic = pictureTable.get(pictureName);
+		String picOwner = pic.getOwnerName();
+		List picList = listTable.get(pic.getListName());
+		String ownerPermissions = pic.getPermissions(0).substring(0,1);
+		String listPermissions = pic.getPermissions(1).substring(0,1);
+		String allPermissions = pic.getPermissions(2).substring(0,1);
+		boolean canRead = false;
+		
+		
+		if(currentUser.equals(picOwner) & ownerPermissions.equals("r")) { 
+			canRead = true;
+		}
+		 else if (picList.friends.contains(currentUser) & listPermissions.equals("r")) {
+				 canRead = true;
+		 }
+		 else if (allPermissions.equals("r")) 
+			canRead = true;
+		
+		if(canRead) {
+			File fi = pic.getFile();
+			Scanner reader = new Scanner(fi);
+			
+			consoleOut.println("Friend " + user.getUserName() + " reads " + pictureName + " as:");
+			auditOut.println("Friend " + user.getUserName() + " reads " + pictureName + " as:");
+			
+			if(reader.hasNextLine()) {
+			while(reader.hasNextLine()) {
+				String out = reader.nextLine();
+				consoleOut.println(out);
+				auditOut.println(out);
+			}
+			reader.close();
+			}
+		} else {
+			consoleOut.println("Error on readcomments: " + currentUser + " does not have read permissions for " + pictureName);
+			auditOut.println("Error on readcomments: " + currentUser + " does not have read permissions for " + pictureName);
+			return;
+		}
+		
+		
 		
 	}
 }

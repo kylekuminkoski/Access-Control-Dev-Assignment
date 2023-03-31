@@ -11,6 +11,7 @@ public class Picture {
 	String pictureName;
 	String ownerName;
 	List list;
+	String listName;
 	ArrayList<String> permissions;
 	
 	
@@ -18,6 +19,7 @@ public class Picture {
 		this.pictureName = pictureName;
 		this.ownerName = ownerName;
 		this.list = list;
+		this.listName = list.getName();
 		this.permissions = new ArrayList<String>();
 		this.permissions.add("rw");
 		this.permissions.add("--");
@@ -54,6 +56,14 @@ public class Picture {
 	
 	public void setList(List newList) {
 		this.list = newList;
+	}
+	
+	public String getListName() {
+		return this.listName;
+	}
+	
+	public void setListName(String listName) {
+		this.listName = listName;
 	}
 	
 	public String getPermissions(int index) {
