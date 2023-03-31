@@ -1,11 +1,15 @@
 package access;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -43,11 +47,11 @@ public class access{
 		
 		//Create Lists Log
 		lists = new File ("lists.txt");
-		listsOut = createLog(friends);
+		listsOut = createLog(lists);
 		
 		//Create Pictures Log
 		pictures = new File ("pictures.txt");
-		listsOut = createLog(pictures);		
+		picturesOut = createLog(pictures);		
 
 		//Read in instructions from arguments. If argument is not given, throws error.
 		if(args.length != 0) {
@@ -98,8 +102,6 @@ public class access{
 		while(reader.hasNextLine()) { //Iterates through each line in instruction file
 			String line = reader.nextLine();
 			
-			if(line.equals("end")) // Ends instruction execution when end is given
-				break;
 			
 			StringTokenizer tokens = new StringTokenizer(line);
 			while(tokens.hasMoreTokens()) { //Iterates through each token in a line
@@ -154,7 +156,7 @@ public class access{
 					break;
 					
 				case "end":
-					
+					end();
 					break;
 				}
 				
@@ -533,7 +535,43 @@ public class access{
 			auditOut.println("Error on readcomments: " + currentUser + " does not have write permissions for " + pictureName);
 			return;
 		}
+
+	}
+	
+	public static void end() throws IOException {
+		//BufferedWriter bfList = new BufferedWriter(new FileWriter(lists));
+		//BufferedWriter bfPics = new BufferedWriter(new FileWriter(pictures)); 
 		
+		for (Map.Entry<String, List> entry :
+			listTable.entrySet()) {
+			
+			List list = entry.getValue();
+			
+			if(list.getName().equals("nil"))
+				continue;
+			
+			ArrayList<String> print = list.getList();
+			
+			listsOut.print(entry.getKey() + ": ");
+			print.forEach((n) -> listsOut.print(n + " "));
+			listsOut.println();
+			
+		}
 		
+		for (Map.Entry<String, Picture> entry :
+			pictureTable.entrySet()) {
+			
+			Picture pic = entry.getValue();
+
+			picturesOut.print(entry.getKey() + ": ");
+			picturesOut.print(pic.getOwnerName() + " " + pic.getListName() + " " + pic.getPermissions(0) + " " + pic.getPermissions(1) + " " + pic.getPermissions(2));
+		}
+		
+		consoleOut.close();
+		auditOut.close();
+		friendsOut.close();
+		listsOut.close();
+		picturesOut.close();
+		System.exit(0);
 	}
 }
