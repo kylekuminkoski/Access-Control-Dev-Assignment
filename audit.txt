@@ -8,6 +8,7 @@ Friend root logged out
 Error: friend steve does not exist
 Friend steveo views the profile
 Picture script with owner steveo and default permissions created
+Friend steveo wrote to script:  echo Hello World!
 Permissions for script set to -w rw -- by steveo
 Error: file script2 not found
 Error on chlst: Friend steveo is not a member of list testers
@@ -22,8 +23,10 @@ Error on chown: file script3 not found
 Friend root logged out
 Friend rita views the profile
 Error: picture script already exists
+Friend rita wrote to script:  echo Hello World!
 Friend rita reads script as:
-script
+ echo Hello World!
+ echo Hello World!
 Error: only profile owner may issue listadd command
 Error: only profile owner may issue friendadd command
 Friend rita logged out

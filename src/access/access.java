@@ -16,16 +16,19 @@ public class access{
 	private static Session user;
 	private static HashMap<String, List> listTable;
 	private static HashMap<String, Picture> pictureTable;
-	
+	private static String text;
 	public static void main(String[] args) throws Exception {
 		//Console Print Stream
 		consoleOut = System.out;
 		
-		// Create nil list
-		nil = new List();
+		text = "";
 		
 		listTable = new HashMap<String, List>();
 		pictureTable = new HashMap<String, Picture>();
+		
+		// Create nil list
+		nil = new List();
+		listTable.put("nil", nil);
 		
 		// Create null Session
 		user = new Session();
@@ -147,7 +150,7 @@ public class access{
 					break;
 					
 				case "writecomments":
-						
+					writeComments(tokens.nextToken(), tokens.nextToken(""));
 					break;
 					
 				case "end":
@@ -454,12 +457,10 @@ public class access{
 		boolean canRead = false;
 		
 		
-		if(currentUser.equals(picOwner) & ownerPermissions.equals("r")) { 
+		if(currentUser.equals(picOwner) & ownerPermissions.equals("r")) 
 			canRead = true;
-		}
-		 else if (picList.friends.contains(currentUser) & listPermissions.equals("r")) {
+		 else if (picList.getList().contains(currentUser) & listPermissions.equals("r")) 
 				 canRead = true;
-		 }
 		 else if (allPermissions.equals("r")) 
 			canRead = true;
 		
@@ -470,6 +471,7 @@ public class access{
 			consoleOut.println("Friend " + user.getUserName() + " reads " + pictureName + " as:");
 			auditOut.println("Friend " + user.getUserName() + " reads " + pictureName + " as:");
 			
+			reader.nextLine();
 			if(reader.hasNextLine()) {
 			while(reader.hasNextLine()) {
 				String out = reader.nextLine();
@@ -484,6 +486,53 @@ public class access{
 			return;
 		}
 		
+		
+	}
+	
+	
+	public static void writeComments(String pictureName, String text) throws FileNotFoundException {
+		if(checkSession("writecomments"))
+			return;
+		
+		if(!pictureExists(pictureName)) {
+			consoleOut.println("Error on writecomments: file " + pictureName + " not found");
+			auditOut.println("Error on writecomments: file " + pictureName + " not found");
+			return;
+		}
+		
+		String currentUser = user.getUserName();
+		Picture pic = pictureTable.get(pictureName);
+		String picOwner = pic.getOwnerName();
+		List picList = listTable.get(pic.getListName());
+		String ownerPermissions = pic.getPermissions(0).substring(1,2);
+		String listPermissions = pic.getPermissions(1).substring(1,2);
+		String allPermissions = pic.getPermissions(2).substring(1,2);
+		boolean canRead = false;
+		
+		
+		if(currentUser.equals(picOwner) & ownerPermissions.equals("w"))  
+			canRead = true;
+		 else if (picList.getList().contains(currentUser) & listPermissions.equals("w")) 
+				 canRead = true;
+		 else if (allPermissions.equals("w")) 
+			canRead = true;
+		
+
+		if(canRead) {
+			File fi = pic.getFile();
+			PrintStream writer = new PrintStream(new FileOutputStream(fi, true));
+		
+			consoleOut.println("Friend " + user.getUserName() + " wrote to " + pictureName + ": " + text);
+			auditOut.println("Friend " + user.getUserName() + " wrote to " + pictureName + ": " + text);
+		
+			writer.println(text);
+			writer.close();
+			
+		} else {
+			consoleOut.println("Error on readcomments: " + currentUser + " does not have write permissions for " + pictureName);
+			auditOut.println("Error on readcomments: " + currentUser + " does not have write permissions for " + pictureName);
+			return;
+		}
 		
 		
 	}
