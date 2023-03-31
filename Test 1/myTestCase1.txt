@@ -1,0 +1,33 @@
+friendadd root
+viewby root
+friendadd kyle
+friendadd andy
+friendadd steve
+listadd myList
+friendlist kyle myList
+postpicture myPicture
+chlst myPicture myList
+chmod myPicture rw r- --
+logout
+viewby steve
+postpicture stevespicture
+listadd blocked
+friendlist andy blocked
+chmod stevespicture rw -- rw
+logout
+viewby andy
+writecomments stevespicture Why do you hate me steve?
+writecomments myPicture Tell steve to unblock me.
+logout
+viewby kyle
+postpicture kylesPicture
+writecomments myPicture hello root
+logout
+viewby root
+writecomments myPicture You can comment now kyle
+logout
+viewby kyle
+writecomments myPicture thanks for the edit privs
+writecomments stevespicture steve let andy view your profile!
+logout
+end

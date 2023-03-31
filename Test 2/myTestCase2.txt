@@ -1,0 +1,31 @@
+friendadd kyle
+friendadd alice
+viewby alice
+viewby kyle
+friendadd alice
+friendadd bob
+logout
+postpicture testpic1
+listadd testlist1
+viewby alice
+postpicture alicePost
+chlst alicePost list
+writecomments Hello world!
+chmod alicePost -- -- --
+writecomments alicePost im locked out
+readcomments alicePost
+chown alicePost kyle
+logout
+viewby kyle
+listadd adminList
+chlst alicePost adminList
+writecomments alicePost Hello
+readcomments alicePost
+chmod alicePost rw rw --
+writecomments alicePost im back
+readcomments alicePost
+logout
+viewby bob
+readcomments alicePost
+logout
+end

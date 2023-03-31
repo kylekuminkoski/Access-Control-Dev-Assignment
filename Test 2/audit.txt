@@ -1,0 +1,29 @@
+Friend kyle added
+Error: only profile owner may issue friendadd command
+Error: friend alice does not exist
+Friend kyle views the profile
+Friend alice added
+Friend bob added
+Friend kyle logged out
+Error: someone must be viewing the profile to use the postpicture command
+Error: only profile owner may issue listadd command
+Friend alice views the profile
+Picture alicePost with owner alice and default permissions created
+Error on writecomments: file Hello not found
+Permissions for alicePost set to -- -- -- by alice
+Error on readcomments: alice does not have write permissions for alicePost
+Error on readcomments: alice does not have read permissions for alicePost
+Error: only profile owner may issue chown command
+Friend alice logged out
+Friend kyle views the profile
+list adminList created
+Friend kyle changed list of alicePost to adminList
+Error on readcomments: kyle does not have write permissions for alicePost
+Error on readcomments: kyle does not have read permissions for alicePost
+Permissions for alicePost set to rw rw -- by kyle
+Error on readcomments: kyle does not have write permissions for alicePost
+Error on readcomments: kyle does not have read permissions for alicePost
+Friend kyle logged out
+Friend bob views the profile
+Error on readcomments: bob does not have read permissions for alicePost
+Friend bob logged out

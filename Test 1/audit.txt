@@ -1,0 +1,32 @@
+Friend root added
+Friend root views the profile
+Friend kyle added
+Friend andy added
+Friend steve added
+list myList created
+Friend kyle added to list myList
+Picture myPicture with owner root and default permissions created
+Friend root changed list of myPicture to myList
+Permissions for myPicture set to rw r- -- by root
+Friend root logged out
+Friend steve views the profile
+Picture stevespicture with owner steve and default permissions created
+Error: only profile owner may issue listadd command
+Error: only profile owner may issue friendlist command
+Permissions for stevespicture set to rw -- rw by steve
+Friend steve logged out
+Friend andy views the profile
+Friend andy wrote to stevespicture:  Why do you hate me steve?
+Error on readcomments: andy does not have write permissions for myPicture
+Friend andy logged out
+Friend kyle views the profile
+Picture kylesPicture with owner kyle and default permissions created
+Error on readcomments: kyle does not have write permissions for myPicture
+Friend kyle logged out
+Friend root views the profile
+Friend root wrote to myPicture:  You can comment now kyle
+Friend root logged out
+Friend kyle views the profile
+Error on readcomments: kyle does not have write permissions for myPicture
+Friend kyle wrote to stevespicture:  steve let andy view your profile!
+Friend kyle logged out

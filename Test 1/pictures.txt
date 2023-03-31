@@ -1,0 +1,1 @@
+kylesPicture: kyle nil rw -- --myPicture: root myList rw r- --stevespicture: steve nil rw -- rw
