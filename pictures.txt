@@ -1,1 +1,0 @@
-script: steveo testers -w rw --
